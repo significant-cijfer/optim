@@ -1,0 +1,9 @@
+#!/bin/sh
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+perf record -F 10000 -g -- $@
+perf script > $SCRIPT_DIR/out.perf
+
+$SCRIPT_DIR/FlameGraph/stackcollapse-perf.pl $SCRIPT_DIR/out.perf > $SCRIPT_DIR/out.folded
+$SCRIPT_DIR/FlameGraph/flamegraph.pl $SCRIPT_DIR/out.folded > kernel.svg

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+valgrind --tool=callgrind --callgrind-out-file=$SCRIPT_DIR/callgrind.out -- $@
+
+gprof2dot -f callgrind $SCRIPT_DIR/callgrind.out > $SCRIPT_DIR/callgrind.dot
+dot $SCRIPT_DIR/callgrind.dot -Tsvg -o cgraph.svg
